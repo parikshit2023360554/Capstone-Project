@@ -140,6 +140,136 @@ function ProductDetails() {
       rating: 4.6,
       reviews: 189,
       inStock: true
+    },
+    { 
+      id: 6, 
+      name: 'Bluetooth Speaker', 
+      price: 79.99, 
+      category: 'Electronics',
+      description: 'Portable Bluetooth speaker with premium sound quality and long battery life.',
+      features: [
+        '360° sound',
+        'Waterproof design',
+        '20-hour battery',
+        'Bluetooth 5.0',
+        'Built-in microphone',
+        'Party mode'
+      ],
+      specs: {
+        'Brand': 'SoundWave',
+        'Power': '20W',
+        'Battery': '20 hours',
+        'Waterproof': 'IPX7',
+        'Weight': '500g',
+        'Warranty': '1 year'
+      },
+      rating: 4.4,
+      reviews: 95,
+      inStock: true
+    },
+    { 
+      id: 7, 
+      name: 'Power Bank', 
+      price: 39.99, 
+      category: 'Electronics',
+      description: 'High-capacity power bank for charging multiple devices on the go.',
+      features: [
+        '20,000mAh capacity',
+        'Fast charging',
+        'Multiple ports',
+        'LED indicator',
+        'Compact design',
+        'Universal compatibility'
+      ],
+      specs: {
+        'Brand': 'PowerMax',
+        'Capacity': '20,000mAh',
+        'Output': '18W',
+        'Ports': '3',
+        'Weight': '350g',
+        'Warranty': '1 year'
+      },
+      rating: 4.1,
+      reviews: 167,
+      inStock: true
+    },
+    { 
+      id: 8, 
+      name: 'Wireless Mouse', 
+      price: 59.99, 
+      category: 'Electronics',
+      description: 'Ergonomic wireless mouse with precision tracking and customizable buttons.',
+      features: [
+        'Ergonomic design',
+        'Precision sensor',
+        'Programmable buttons',
+        'Long battery life',
+        'Silent clicks',
+        'Multi-device support'
+      ],
+      specs: {
+        'Brand': 'MouseTech',
+        'DPI': '12,000',
+        'Battery': '6 months',
+        'Connectivity': '2.4GHz',
+        'Weight': '95g',
+        'Warranty': '2 years'
+      },
+      rating: 4.8,
+      reviews: 203,
+      inStock: true
+    },
+    { 
+      id: 9, 
+      name: 'T-Shirt', 
+      price: 24.99, 
+      category: 'Clothing',
+      description: 'Comfortable cotton t-shirt with modern fit and stylish design.',
+      features: [
+        '100% cotton',
+        'Modern fit',
+        'Breathable fabric',
+        'Multiple colors',
+        'Machine washable',
+        'Sustainable material'
+      ],
+      specs: {
+        'Brand': 'StyleWear',
+        'Material': '100% Cotton',
+        'Fit': 'Modern',
+        'Care': 'Machine wash',
+        'Weight': '180g',
+        'Warranty': '30 days'
+      },
+      rating: 4.0,
+      reviews: 78,
+      inStock: true
+    },
+    { 
+      id: 10, 
+      name: 'Jeans', 
+      price: 79.99, 
+      category: 'Clothing',
+      description: 'Classic denim jeans with perfect fit and durable construction.',
+      features: [
+        'Premium denim',
+        'Perfect fit',
+        'Durable construction',
+        'Multiple washes',
+        'Stretch comfort',
+        'Timeless style'
+      ],
+      specs: {
+        'Brand': 'DenimCo',
+        'Material': '98% Cotton, 2% Elastane',
+        'Fit': 'Slim',
+        'Care': 'Machine wash cold',
+        'Weight': '400g',
+        'Warranty': '30 days'
+      },
+      rating: 4.2,
+      reviews: 112,
+      inStock: true
     }
   ]
 
@@ -161,6 +291,18 @@ function ProductDetails() {
     )
   }
 
+  // Get related products (same category, excluding current product)
+  const relatedProducts = products
+    .filter(p => p.id !== product.id && p.category === product.category)
+    .slice(0, 4)
+
+  // If not enough products in same category, add some from other categories
+  const additionalProducts = products
+    .filter(p => p.id !== product.id && p.category !== product.category)
+    .slice(0, 4 - relatedProducts.length)
+
+  const allRelatedProducts = [...relatedProducts, ...additionalProducts].slice(0, 4)
+
   const handleAddToCart = () => {
     addToCart({ ...product, quantity })
     navigate('/cart')
@@ -174,6 +316,14 @@ function ProductDetails() {
     if (newQuantity >= 1) {
       setQuantity(newQuantity)
     }
+  }
+
+  const handleRelatedProductClick = (productId) => {
+    navigate(`/product/${productId}`)
+  }
+
+  const handleAddRelatedToCart = (relatedProduct) => {
+    addToCart(relatedProduct)
   }
 
   return (
@@ -310,6 +460,58 @@ function ProductDetails() {
             </div>
           </div>
         </div>
+
+        {/* Related Products Section */}
+        {allRelatedProducts.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Products</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {allRelatedProducts.map((relatedProduct) => (
+                <div key={relatedProduct.id} className="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+                  <div 
+                    className="h-48 overflow-hidden cursor-pointer"
+                    onClick={() => handleRelatedProductClick(relatedProduct.id)}
+                  >
+                    <img
+                      src={getProductImage(relatedProduct.id)}
+                      alt={relatedProduct.name}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.src = "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop"
+                      }}
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 
+                      className="text-lg font-medium text-gray-900 cursor-pointer hover:text-indigo-600"
+                      onClick={() => handleRelatedProductClick(relatedProduct.id)}
+                    >
+                      {relatedProduct.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-1">{relatedProduct.category}</p>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium text-gray-900">${relatedProduct.price}</p>
+                      <div className="flex items-center">
+                        <span className="text-yellow-400 text-sm">★</span>
+                        <span className="text-sm text-gray-600 ml-1">{relatedProduct.rating}</span>
+                        <span className="text-xs text-gray-500 ml-1">({relatedProduct.reviews})</span>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAddRelatedToCart(relatedProduct)
+                      }}
+                      className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
