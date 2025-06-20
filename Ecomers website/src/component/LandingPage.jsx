@@ -6,6 +6,16 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-200 flex flex-col">
+      {/* Navbar */}
+      <nav className="w-full flex items-center justify-between px-6 py-4 bg-white/80 shadow-md backdrop-blur-md sticky top-0 z-10">
+        <div className="text-2xl font-bold text-indigo-700 cursor-pointer" onClick={() => navigate('/')}>ShopEase</div>
+        <button
+          onClick={() => navigate('/employee-login')}
+          className="px-5 py-2 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition"
+        >
+          Employee Login
+        </button>
+      </nav>
       {/* Hero Section */}
       <header className="flex-1 flex flex-col justify-center items-center text-center px-4">
         <h1 className="text-5xl md:text-6xl font-extrabold text-indigo-700 mb-4 drop-shadow-lg">

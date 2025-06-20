@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { getProductImage } from '../assets/images/products'
 import { useTheme } from '../context/ThemeContext'
+import { useAuth } from '../context/AuthContext'
 
 function Dashboard() {
   const navigate = useNavigate()
   const { addToCart, getCartCount } = useCart()
   const { darkMode } = useTheme()
+  const { isLoggedIn, logout } = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [sortBy, setSortBy] = useState('')
@@ -42,6 +44,7 @@ function Dashboard() {
   }
 
   const handleLogout = () => {
+    logout()
     navigate('/login')
   }
 
@@ -150,39 +153,48 @@ function Dashboard() {
                   </span>
                 )}
               </button>
-              {/* User Icon with Dropdown */}
-              <div className="relative">
-                <span
-                  className={`p-2 cursor-pointer ${darkMode ? 'text-gray-200' : 'text-gray-600'}`}
-                  onClick={() => setShowUserMenu((prev) => !prev)}
+              {/* Conditionally render Login button or User Icon */}
+              {isLoggedIn ? (
+                <div className="relative">
+                  <span
+                    className={`p-2 cursor-pointer ${darkMode ? 'text-gray-200' : 'text-gray-600'}`}
+                    onClick={() => setShowUserMenu((prev) => !prev)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  {showUserMenu && (
+                    <div className={`absolute right-0 mt-2 w-40 rounded-md shadow-lg z-50 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}> 
+                      <button
+                        className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${darkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700'}`}
+                        onClick={() => { setShowUserMenu(false); navigate('/profile') }}
+                      >
+                        Profile
+                      </button>
+                      <button
+                        className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${darkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700'}`}
+                        onClick={() => { setShowUserMenu(false); navigate('/settings') }}
+                      >
+                        Settings
+                      </button>
+                      <button
+                        className={`block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 ${darkMode ? 'dark:text-red-400 dark:hover:bg-red-500' : ''}`}
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className={`px-5 py-2 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </span>
-                {showUserMenu && (
-                  <div className={`absolute right-0 mt-2 w-40 rounded-md shadow-lg z-50 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}> 
-                    <button
-                      className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${darkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700'}`}
-                      onClick={() => { setShowUserMenu(false); navigate('/profile') }}
-                    >
-                      Profile
-                    </button>
-                    <button
-                      className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${darkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700'}`}
-                      onClick={() => { setShowUserMenu(false); navigate('/settings') }}
-                    >
-                      Settings
-                    </button>
-                    <button
-                      className={`block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 ${darkMode ? 'dark:text-red-400 dark:hover:bg-red-500' : ''}`}
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
+                  Login
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Login() {
   const navigate = useNavigate()
   const [isEmployeeLogin, setIsEmployeeLogin] = useState(false)
+  const { login } = useAuth()
 
   const handleEmployeeLogin = () => {
     navigate('/employee-login')
@@ -13,6 +15,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault()
     // Add your login logic here
+    login()
     navigate('/dashboard')
   }
 

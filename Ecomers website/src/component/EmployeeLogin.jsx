@@ -9,6 +9,12 @@ function EmployeeLogin() {
     navigate('/')
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // Add authentication logic here if needed
+    navigate('/employee-dashboard')
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
@@ -26,7 +32,7 @@ function EmployeeLogin() {
             ← Back to Customer Login
           </button>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm space-y-4">
             <div>
